@@ -81,7 +81,7 @@ class EventSeeder extends Seeder
         ];
 
         // 5) Buat 20 event + ticket types
-        foreach (range(1, 20) as $i) {
+        foreach (range(1, 120) as $i) {
             $theme = $themes[array_rand($themes)];
             $venueId = $venues->random(); // ← selalu UUID valid, tidak mungkin 0
             $start = now()->addDays(rand(10, 200));

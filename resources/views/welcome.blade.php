@@ -18,15 +18,30 @@
     </div>
 
     {{-- Filter Buttons --}}
-    <div id="events" class="flex space-x-2 mt-8 scroll-mt-24">
-        <button class="px-4 py-1.5 rounded-full bg-indigo-100 text-indigo-700 text-sm font-semibold">All</button>
-        <button class="px-4 py-1.5 rounded-full bg-white border text-gray-700 text-sm hover:bg-gray-50">VIP</button>
-        <button class="px-4 py-1.5 rounded-full bg-white border text-gray-700 text-sm hover:bg-gray-50">Regular</button>
-        <button class="px-4 py-1.5 rounded-full bg-white border text-gray-700 text-sm hover:bg-gray-50">Festival</button>
-    </div>
+@php
+    // $types dan $type dikirim dari controller
+@endphp
+<div id="events" class="flex flex-wrap gap-2 mt-8 scroll-mt-24">
+    {{-- ALL --}}
+    <a href="{{ route('home') }}#events"
+       class="px-4 py-1.5 rounded-full text-sm font-semibold
+              {{ $type ? 'bg-white border text-gray-700 hover:bg-gray-50' : 'bg-indigo-100 text-indigo-700' }}">
+        All
+    </a>
+
+    {{-- Types dari DB --}}
+    @foreach($types as $t)
+        <a href="{{ route('home', ['type'=>$t]) }}#events"
+           class="px-4 py-1.5 rounded-full text-sm font-semibold
+                  {{ $type === $t ? 'bg-indigo-100 text-indigo-700' : 'bg-white border text-gray-700 hover:bg-gray-50' }}">
+            {{ $t }}
+        </a>
+    @endforeach
+</div>
+
 
     {{-- Events Grid --}}
-   <x-events.grid :events="$events" />
+   <x-events.grid :events="$events" :type="$type ?? null" />
 
 </div>
 @endsection

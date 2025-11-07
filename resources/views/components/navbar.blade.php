@@ -29,11 +29,37 @@
                 <a href="{{ route('login') }}" class="px-4 py-1.5 border rounded-lg text-sm font-semibold hover:bg-gray-100">Log in</a>
                 <a href="{{ route('register') }}" class="px-4 py-1.5 bg-black text-white rounded-lg text-sm font-semibold hover:bg-gray-800">Sign up</a>
             @else
-                <a href="{{ url('/') }}" class="text-sm font-medium hover:text-indigo-600">{{ Auth::user()->name }}</a>
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-                    <button class="text-sm text-gray-500 hover:text-red-500">Logout</button>
-                </form>
+                <div class="dropdown dropdown-end">
+                    <div class="flex items-center space-x-3">
+
+                        <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
+                            <div class="w-10 rounded-full">
+                                <img
+                                    alt="Avatar"
+                                    src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <ul tabindex="-1" class="menu menu-sm dropdown-content bg-base-100 rounded-box z-10 mt-3 w-52 p-2 shadow">
+                        <li>
+                            <a href="{{ url('/') }}" class=" hover:text-indigo-600">{{ Auth::user()->name }}</a>
+                        </li>
+                        <li>
+                            <a class="justify-between">
+                                Profile
+                                <span class="badge">New</span>
+                            </a>
+                        </li>
+                        <li><a href="#">Settings</a></li>
+                        <li>
+                            <form method="POST" action="{{ route('logout') }}" class="w-full">
+                                @csrf
+                                <button type="submit" class="w-full text-left">Logout</button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
             @endguest
         </div>
     </div>
