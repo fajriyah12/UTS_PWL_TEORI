@@ -37,13 +37,10 @@ class AuthenticatedSessionController extends Controller
         $user = $request->user();
 
         // Redirect per role
-        if ($user->isAdmin()) {
-            return redirect()->intended(route('admin.dashboard'));
-        }
-        if ($user->isOrganizer()) {
-            return redirect()->intended(route('organizer.dashboard'));
-        }
-        return redirect()->intended(RouteServiceProvider::HOME); // /dashboard
+       if ($user->role === 'admin') {
+        return redirect()->route('admin.dashboard');
+    }
+    return redirect()->to(path: '/');
     }
 
     public function destroy(Request $request): RedirectResponse

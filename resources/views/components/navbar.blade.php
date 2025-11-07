@@ -5,14 +5,11 @@
             <a href="/" class="font-bold text-xl text-indigo-600">ORR'EA</a>
             <ul class="hidden md:flex space-x-8 font-medium">
                 <li><a href="/" class="hover:text-indigo-600">Home</a></li>
-
-                @if (Route::has('events.index'))
-                    <li><a href="{{ route('events.index') }}" class="hover:text-indigo-600">Event</a></li>
-                @else
-                    <li><span class="text-gray-400">Event</span></li>
-                @endif
-
-                <li><a href="#" class="hover:text-indigo-600">Shop</a></li>
+                <li>
+                    <a href="{{ url('/') }}#events" class="hover:text-indigo-600 scroll-smooth">
+                        Event
+                    </a>
+                </li>
                 <li><a href="#" class="hover:text-indigo-600">About</a></li>
             </ul>
         </div>
@@ -32,7 +29,7 @@
                 <a href="{{ route('login') }}" class="px-4 py-1.5 border rounded-lg text-sm font-semibold hover:bg-gray-100">Log in</a>
                 <a href="{{ route('register') }}" class="px-4 py-1.5 bg-black text-white rounded-lg text-sm font-semibold hover:bg-gray-800">Sign up</a>
             @else
-                <a href="{{ route('dashboard') }}" class="text-sm font-medium hover:text-indigo-600">{{ Auth::user()->name }}</a>
+                <a href="{{ url('/') }}" class="text-sm font-medium hover:text-indigo-600">{{ Auth::user()->name }}</a>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <button class="text-sm text-gray-500 hover:text-red-500">Logout</button>

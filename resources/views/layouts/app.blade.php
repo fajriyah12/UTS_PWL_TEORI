@@ -8,6 +8,12 @@
     <link href="https://cdn.jsdelivr.net/npm/daisyui@5.4.5/dist/full.css" rel="stylesheet" type="text/css" />
 </head>
 <body class="bg-gray-50 text-gray-900">
+    @if(session('success'))
+    <div class="fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded shadow-lg z-50">
+        {{ session('success') }}
+    </div>
+@endif
+
     {{-- Navbar --}}
     <x-navbar />
 
