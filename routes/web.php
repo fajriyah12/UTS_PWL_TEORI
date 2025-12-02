@@ -22,7 +22,7 @@ Route::post('/checkout/{ticketType}', [CheckoutController::class, 'store'])->nam
 
 // Area umum (harus login + email verified)
 Route::middleware(['auth','verified'])->group(function () {
-    Route::view(uri: '/dashboard', view: 'dashboard')->name(name: 'dashboard'); // default dashboard
+    Route::view(uri: '/dashboard', view: 'dashboard')->name(name: 'dashboard');
 });
 
 // Admin
