@@ -52,4 +52,12 @@ class ProfileController extends Controller
 
         return redirect('/');
     }
+
+    public function show(Request $request)
+   {
+    return view('profile.show', [
+        'user' => $request->user(),
+    ]);
+   }
+
 }

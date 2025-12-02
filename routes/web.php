@@ -6,11 +6,14 @@ use App\Http\Middleware\RoleMiddleware;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\AboutController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\Admin\DataMasterController;
 use App\Http\Controllers\Admin\SettingController;
 
 Route::get('/', HomeController::class)->name('home');
+Route::get('/about', [AboutController::class, 'index'])->name('about');
+
 
 require __DIR__.'/auth.php';
 require __DIR__.'/profile.php';
@@ -22,7 +25,8 @@ Route::post('/checkout/{ticketType}', [CheckoutController::class, 'store'])->nam
 
 // Area umum (harus login + email verified)
 Route::middleware(['auth','verified'])->group(function () {
-    Route::view(uri: '/dashboard', view: 'dashboard')->name(name: 'dashboard'); // default dashboard
+    Route::view(uri: '/dashboard', view: 'dashboard')->name(name: 'dashboard');
+    Route::view('/settings', 'user.settings')->name('user.settings'); // default dashboard
 });
 
 // Admin

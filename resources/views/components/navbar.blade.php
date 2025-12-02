@@ -10,8 +10,8 @@
                         Event
                     </a>
                 </li>
-                <li><a href="#" class="hover:text-indigo-600">About</a></li>
-            </ul>
+               <li><a href="{{ route('about') }}" class="hover:text-indigo-600">About</a></li>
+
         </div>
 
         <div class="flex items-center space-x-3">
@@ -35,7 +35,7 @@
                         <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
                             <div class="w-10 rounded-full">
                                 <img
-                                    alt="Avatar"
+                                    alt="Profile"
                                     src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
                             </div>
                         </div>
@@ -46,12 +46,13 @@
                             <a href="{{ url('/') }}" class=" hover:text-indigo-600">{{ Auth::user()->name }}</a>
                         </li>
                         <li>
-                            <a class="justify-between">
-                                Profile
-                                <span class="badge">New</span>
-                            </a>
+                            <a href="{{ route('profile.show') }}" class="justify-between">
+                              Profile
+                            <span class="badge">New</span>
+                             </a>
+
                         </li>
-                        <li><a href="#">Settings</a></li>
+                        <li><a href="#">Transaksi</a></li>
                         <li>
                             <form method="POST" action="{{ route('logout') }}" class="w-full">
                                 @csrf
