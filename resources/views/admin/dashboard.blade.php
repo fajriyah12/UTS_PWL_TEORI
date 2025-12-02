@@ -110,7 +110,7 @@
                     -
                   @endif
                 </td>
-                <td>{{ $transaction->user->name }}</td>
+                <td>{{ $transaction->buyer_name }}</td>
                 <td><span class="bg-green-100 text-green-600 px-2 py-1 rounded text-sm">{{ ucfirst($transaction->status) }}</span></td>
               </tr>
               @empty

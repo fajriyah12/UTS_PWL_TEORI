@@ -21,4 +21,10 @@ class Order extends Model
             $order->id = (string) Str::uuid();
         });
     }
+    
+    public function orderItems()
+{
+    return $this->hasMany(OrderItem::class, 'order_id', 'id');
+}
+
 }
