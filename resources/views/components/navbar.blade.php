@@ -36,7 +36,7 @@
                             <div class="w-10 rounded-full">
                                 <img
                                     alt="Profile"
-                                    src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
+                                    src="{{ Auth::user()->photo ? asset('storage/profile/' . Auth::user()->photo) : asset('images/default-avatar.png') }}" />
                             </div>
                         </div>
                     </div>
@@ -52,7 +52,8 @@
                              </a>
 
                         </li>
-                        <li><a href="#">Transaksi</a></li>
+                        <li><a href="{{ route('transactions.tickets') }}">My Tickets</a></li>
+                        <li><a href="{{ route('transactions.index') }}">Riwayat Transaksi</a></li>
                         <li>
                             <form method="POST" action="{{ route('logout') }}" class="w-full">
                                 @csrf

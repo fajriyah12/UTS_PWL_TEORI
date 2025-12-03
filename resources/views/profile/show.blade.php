@@ -1,113 +1,143 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="max-w-5xl mx-auto mt-10 mb-20">
+<div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
+    <div class="md:grid md:grid-cols-3 md:gap-6">
+        
+        <!-- Left Sidebar: Profile Photo & Basic Info -->
+        <div class="md:col-span-1">
+            <div class="px-4 sm:px-0">
+                <h3 class="text-lg font-medium leading-6 text-gray-900">Profile Picture</h3>
+                <p class="mt-1 text-sm text-gray-600">
+                    Update your profile photo and personal details.
+                </p>
+            </div>
 
-    <!-- Header -->
-    <div class="flex justify-between items-center mb-6">
-        <h1 class="text-3xl font-bold text-gray-800">My Profile</h1>
-
-        <a href="{{ route('profile.edit') }}"
-           class="px-4 py-2 bg-gray-800 text-white rounded-lg shadow hover:bg-gray-900">
-            ✎ Edit
-        </a>
-    </div>
-
-    <!-- Profile Card -->
-    <div class="bg-white shadow rounded-xl p-6 mb-8 flex items-center gap-5 border">
-        <img 
-            src="{{ $user->photo 
-                ? asset('storage/profile/' . $user->photo) 
-                : asset('storage/profile/default.jpg') }}"
-            class="w-16 h-16 rounded-full object-cover border"
-            alt="Profile Photo">
-
-        <div>
-            <h2 class="text-xl font-semibold text-gray-800">{{ $user->name }}</h2>
-            <p class="text-gray-500">{{ $user->email }}</p>
-        </div>
-    </div>
-
-    <!-- Main Form Card -->
-    <div class="bg-white shadow rounded-xl p-8 border">
-
-        <h2 class="text-xl font-semibold mb-6">Personal Information</h2>
-
-        <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data">
-            @csrf
-            @method('PATCH')
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-                <!-- LEFT SIDE -->
-                <div class="space-y-4">
-
-                    {{-- Name --}}
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Name:</label>
-                        <input type="text" name="first_name" value="{{ $user->name }}"
-                               class="w-full border rounded-lg p-3 bg-gray-50">
+            <div class="mt-5 bg-white shadow sm:rounded-lg overflow-hidden">
+                <div class="px-4 py-5 sm:p-6 text-center">
+                    <div class="mb-4">
+                        <img class="h-32 w-32 rounded-full object-cover mx-auto border-4 border-white shadow-lg" 
+                             src="{{ $user->photo ? asset('storage/profile/' . $user->photo) : asset('images/default-avatar.png') }}" 
+                             alt="{{ $user->name }}">
                     </div>
-
-                    {{-- Email --}}
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Email Address:</label>
-                        <input type="email" name="email" value="{{ $user->email }}"
-                               class="w-full border rounded-lg p-3 bg-gray-50">
-                    </div>
-
-                    {{-- Password --}}
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Password:</label>
-                        <input type="password" name="password"
-                               class="w-full border rounded-lg p-3 bg-gray-50">
-                    </div>
-
-                    {{-- Confirm Password --}}
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Confirm Password:</label>
-                    <input type="password" name="password_confirmation"
-                           class="w-full border rounded-lg p-3 bg-gray-50">
-                </div>
-
-                </div>
-
-                <!-- RIGHT SIDE (ADDRESS SECTION) -->
-                <div class="space-y-4">
-
-                    {{-- Phone --}}
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Phone Number:</label>
-                        <input type="text" name="phone" value="{{ $user->phone ?? '-' }}"
-                               class="w-full border rounded-lg p-3 bg-gray-50">
-                    </div>
-
-                    {{-- Country --}}
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Country:</label>
-                        <input type="text" name="country" value="{{ $user->country }}"
-                               class="w-full border rounded-lg p-3 bg-gray-50">
-                    </div>
-
-                    {{-- State --}}
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">State:</label>
-                        <input type="text" name="state" value="{{ $user->state }}"
-                               class="w-full border rounded-lg p-3 bg-gray-50">
-                    </div>
-
-                    {{-- Role --}}
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Role:</label>
-                        <input type="text" name="role" value="{{ $user->role }}"
-                               class="w-full border rounded-lg p-3 bg-gray-50">
-                    </div>
-
+                    
+                    <h3 class="text-lg font-medium text-gray-900">{{ $user->name }}</h3>
+                    <p class="text-sm text-gray-500">{{ $user->email }}</p>
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800 mt-2">
+                        {{ ucfirst($user->role) }}
+                    </span>
                 </div>
             </div>
-        </form>
+        </div>
 
+        <!-- Right Side: Edit Forms -->
+        <div class="mt-5 md:mt-0 md:col-span-2 space-y-6">
+            
+            <!-- Personal Information Form -->
+            <div class="bg-white shadow sm:rounded-lg">
+                <div class="px-4 py-5 sm:p-6">
+                    <h3 class="text-lg font-medium leading-6 text-gray-900 mb-4">Personal Information</h3>
+                    
+                    <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        @method('PATCH')
+
+                        <div class="grid grid-cols-6 gap-6">
+                            
+                            <!-- Photo Upload (Hidden but functional) -->
+                            <div class="col-span-6 sm:col-span-6">
+                                <label class="block text-sm font-medium text-gray-700">Change Photo</label>
+                                <input type="file" name="photo" class="mt-1 block w-full text-sm text-gray-500
+                                    file:mr-4 file:py-2 file:px-4
+                                    file:rounded-full file:border-0
+                                    file:text-sm file:font-semibold
+                                    file:bg-indigo-50 file:text-indigo-700
+                                    hover:file:bg-indigo-100">
+                                @error('photo') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                            </div>
+
+                            <!-- Name -->
+                            <div class="col-span-6 sm:col-span-3">
+                                <label for="name" class="block text-sm font-medium text-gray-700">Full Name</label>
+                                <input type="text" name="name" id="name" value="{{ old('name', $user->name) }}" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                @error('name') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                            </div>
+
+
+                            <!-- Phone -->
+                            <div class="col-span-6 sm:col-span-3">
+                                <label for="phone" class="block text-sm font-medium text-gray-700">Phone Number</label>
+                                <input type="text" name="phone" id="phone" value="{{ old('phone', $user->phone) }}" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                            </div>
+
+                            <!-- Date of Birth -->
+                            <div class="col-span-6 sm:col-span-3">
+                                <label for="date_of_birth" class="block text-sm font-medium text-gray-700">Date of Birth</label>
+                                <input type="date" name="date_of_birth" id="date_of_birth" value="{{ old('date_of_birth', $user->date_of_birth) }}" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                            </div>
+
+                            <!-- Gender -->
+                            <div class="col-span-6 sm:col-span-3">
+                                <label class="block text-sm font-medium text-gray-700">Gender</label>
+                                <div class="mt-2 flex space-x-4">
+                                    <label class="inline-flex items-center">
+                                        <input type="radio" name="gender" value="male" class="form-radio text-indigo-600" {{ old('gender', $user->gender) === 'male' ? 'checked' : '' }}>
+                                        <span class="ml-2">Male</span>
+                                    </label>
+                                    <label class="inline-flex items-center">
+                                        <input type="radio" name="gender" value="female" class="form-radio text-pink-600" {{ old('gender', $user->gender) === 'female' ? 'checked' : '' }}>
+                                        <span class="ml-2">Female</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Institution -->
+                            <div class="col-span-6 sm:col-span-3">
+                                <label for="institution" class="block text-sm font-medium text-gray-700">Institution / Company</label>
+                                <input type="text" name="institution" id="institution" value="{{ old('institution', $user->institution) }}" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                            </div>
+
+                            <!-- Occupation -->
+                            <div class="col-span-6 sm:col-span-6">
+                                <label for="occupation" class="block text-sm font-medium text-gray-700">Occupation</label>
+                                <input type="text" name="occupation" id="occupation" value="{{ old('occupation', $user->occupation) }}" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                            </div>
+
+                        </div>
+                        
+                        <div class="mt-6 text-right">
+                            <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                Save Information
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Password Update Section -->
+            <div class="bg-white shadow sm:rounded-lg">
+                <div class="px-4 py-5 sm:p-6">
+                    <h3 class="text-lg font-medium leading-6 text-gray-900 mb-4">Update Password</h3>
+                    <div class="max-w-xl text-sm text-gray-600 mb-4">
+                        Ensure your account is using a long, random password to stay secure.
+                    </div>
+
+                    @include('profile.partials.update-password-form')
+                </div>
+            </div>
+
+            <!-- Delete Account Section -->
+            <div class="bg-white shadow sm:rounded-lg">
+                <div class="px-4 py-5 sm:p-6">
+                    <h3 class="text-lg font-medium leading-6 text-red-600 mb-4">Danger Zone</h3>
+                    <div class="max-w-xl text-sm text-gray-600 mb-4">
+                        Once your account is deleted, all of its resources and data will be permanently deleted.
+                    </div>
+                    @include('profile.partials.delete-user-form')
+                </div>
+            </div>
+
+        </div>
     </div>
-
 </div>
 @endsection

@@ -23,10 +23,7 @@ return new class extends Migration
 }
 public function down(): void
 {
-    Schema::table('users', function (Blueprint $table) {
-        $table->dropIndex(['email','role']);
-        $table->dropColumn(['role','phone']);
-    });
+    Schema::dropIfExists('users');
 }
 
 };

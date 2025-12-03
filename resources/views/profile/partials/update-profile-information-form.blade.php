@@ -47,6 +47,50 @@
             @endif
         </div>
 
+        <!-- Date of Birth -->
+        <div>
+            <x-input-label for="date_of_birth" :value="__('Date of Birth')" />
+            <x-text-input id="date_of_birth" name="date_of_birth" type="date" class="mt-1 block w-full" :value="old('date_of_birth', $user->date_of_birth)" />
+            <x-input-error class="mt-2" :messages="$errors->get('date_of_birth')" />
+        </div>
+
+        <!-- Gender -->
+        <div>
+            <x-input-label for="gender" :value="__('Gender')" />
+            <div class="mt-2 flex gap-4">
+                <label class="inline-flex items-center">
+                    <input type="radio" name="gender" value="male" class="form-radio text-indigo-600" {{ old('gender', $user->gender) === 'male' ? 'checked' : '' }}>
+                    <span class="ml-2">Male</span>
+                </label>
+                <label class="inline-flex items-center">
+                    <input type="radio" name="gender" value="female" class="form-radio text-pink-600" {{ old('gender', $user->gender) === 'female' ? 'checked' : '' }}>
+                    <span class="ml-2">Female</span>
+                </label>
+            </div>
+            <x-input-error class="mt-2" :messages="$errors->get('gender')" />
+        </div>
+
+        <!-- Phone -->
+        <div>
+            <x-input-label for="phone" :value="__('Phone Number')" />
+            <x-text-input id="phone" name="phone" type="tel" class="mt-1 block w-full" :value="old('phone', $user->phone)" placeholder="08..." />
+            <x-input-error class="mt-2" :messages="$errors->get('phone')" />
+        </div>
+
+        <!-- Institution -->
+        <div>
+            <x-input-label for="institution" :value="__('Institution / Company')" />
+            <x-text-input id="institution" name="institution" type="text" class="mt-1 block w-full" :value="old('institution', $user->institution)" />
+            <x-input-error class="mt-2" :messages="$errors->get('institution')" />
+        </div>
+
+        <!-- Occupation -->
+        <div>
+            <x-input-label for="occupation" :value="__('Occupation')" />
+            <x-text-input id="occupation" name="occupation" type="text" class="mt-1 block w-full" :value="old('occupation', $user->occupation)" />
+            <x-input-error class="mt-2" :messages="$errors->get('occupation')" />
+        </div>
+
         <div class="flex items-center gap-4">
             <x-primary-button>{{ __('Save') }}</x-primary-button>
 

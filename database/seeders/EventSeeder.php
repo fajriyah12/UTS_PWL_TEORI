@@ -94,9 +94,10 @@ class EventSeeder extends Seeder
                 'title' => "{$theme['title']} #$i",
                 'slug' => Str::slug($theme['title'].'-'.$i),
                 'description' => "Nikmati konser spektakuler {$theme['artist']} hanya di ORR'EA Ticketing.",
-                'banner_path' => null,
-                'start_at' => $start,
-                'end_at' => $end,
+                'image' => null,
+                'location' => 'Jakarta', // Default location
+                'start_time' => $start,
+                'end_time' => $end,
                 'status' => 'published',
             ]);
 

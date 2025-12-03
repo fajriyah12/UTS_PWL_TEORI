@@ -10,13 +10,14 @@ return new class extends Migration
     Schema::create('events', function (Blueprint $table) {
     $table->uuid('id')->primary();
     $table->foreignUuid('organizer_id')->constrained('organizers')->cascadeOnDelete();
-    $table->foreignUuid('venue_id')->constrained('venues')->restrictOnDelete();
+    $table->foreignUuid('venue_id')->nullable()->constrained('venues')->restrictOnDelete();
     $table->string('title');
     $table->string('slug')->unique();
     $table->text('description')->nullable();
-    $table->string('banner_path')->nullable();
-    $table->dateTime('start_at');
-    $table->dateTime('end_at');
+    $table->string('image')->nullable(); // Renamed from banner_path
+    $table->string('location')->nullable(); // Added location
+    $table->dateTime('start_time'); // Renamed from start_at
+    $table->dateTime('end_time'); // Renamed from end_at
     $table->enum('status',['draft','published','archived','cancelled'])->default('draft');
     $table->timestamps();
 });

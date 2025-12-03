@@ -5,7 +5,7 @@
         @foreach ($events as $event)
             <div>
                 <a href="{{ route('events.show', $event->slug) }}">{{ $event->title }}</a> 
-                ({{ $event->start_at->format('d M Y') }})
+                ({{ $event->start_time->format('d M Y') }})
             </div>
         @endforeach
     </div>

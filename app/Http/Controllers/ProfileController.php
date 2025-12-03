@@ -24,6 +24,11 @@ class ProfileController extends Controller
             'name'  => ['required','string','max:100'],
             'email' => ['required','email','max:255', Rule::unique('users','email')->ignore($user->id)],
             'phone' => ['nullable','string','max:32'],
+            'date_of_birth' => ['nullable', 'date'],
+            'gender' => ['nullable', 'in:male,female'],
+            'institution' => ['nullable', 'string', 'max:255'],
+            'occupation' => ['nullable', 'string', 'max:255'],
+            'photo' => ['nullable', 'image', 'max:2048'], // Max 2MB
         ]);
 
         // jika email berubah, hapus verifikasi
@@ -31,9 +36,22 @@ class ProfileController extends Controller
             $user->email_verified_at = null;
         }
 
+        // Handle Photo Upload
+        if ($request->hasFile('photo')) {
+            // Delete old photo if exists
+            if ($user->photo && \Illuminate\Support\Facades\Storage::exists('public/profile/' . $user->photo)) {
+                \Illuminate\Support\Facades\Storage::delete('public/profile/' . $user->photo);
+            }
+
+            $file = $request->file('photo');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->storeAs('public/profile', $filename);
+            $data['photo'] = $filename;
+        }
+
         $user->fill($data)->save();
 
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
+        return Redirect::route('profile.show')->with('status', 'profile-updated');
     }
 
     public function destroy(Request $request)

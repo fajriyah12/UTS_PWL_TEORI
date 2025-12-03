@@ -14,7 +14,7 @@ return new class extends Migration
     $table->foreignUuid('ticket_type_id')->constrained('ticket_types')->restrictOnDelete();
     $table->string('serial', 32)->unique();
     $table->string('qr_token', 64)->unique();
-    $table->enum('status',['issued','checked_in','refunded','void'])->default('issued');
+    $table->enum('status',['pending','issued','checked_in','refunded','void'])->default('pending');
     $table->string('holder_name')->nullable();
     $table->string('holder_email')->nullable();
     $table->timestamps();
