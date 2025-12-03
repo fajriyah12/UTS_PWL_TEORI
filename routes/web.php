@@ -10,6 +10,7 @@ use App\Http\Controllers\AboutController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\Admin\DataMasterController;
 use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\UserTransactionController;
 
 Route::get('/', HomeController::class)->name('home');
 Route::get('/about', [AboutController::class, 'index'])->name('about');
@@ -27,6 +28,11 @@ Route::post('/checkout/{ticketType}', [CheckoutController::class, 'store'])->nam
 Route::middleware(['auth','verified'])->group(function () {
     Route::view(uri: '/dashboard', view: 'dashboard')->name(name: 'dashboard');
     Route::view('/settings', 'user.settings')->name('user.settings'); // default dashboard
+
+    Route::get('/transactions', [UserTransactionController::class, 'index'])->name('transactions.index');
+    Route::get('/transactions/tickets', [UserTransactionController::class, 'tickets'])->name('transactions.tickets');
+    Route::get('/transactions/tickets/{ticket}', [UserTransactionController::class, 'showTicket'])->name('transactions.ticket.show');
+    Route::get('/fix-tickets', [\App\Http\Controllers\FixTicketController::class, 'fix']);
 });
 
 // Admin

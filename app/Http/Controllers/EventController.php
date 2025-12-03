@@ -12,7 +12,7 @@ class EventController extends Controller
     {
         $events = Event::with('organizer', 'venue')
             ->where('status', 'published')
-            ->orderBy('start_at', 'asc')
+            ->orderBy('start_time', 'asc')
             ->get();
 
         return view('events.index', compact('events'));

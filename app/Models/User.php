@@ -13,6 +13,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     protected $fillable = [
         'name', 'email', 'password', 'phone', 'role', 'email_verified_at',
+        'date_of_birth', 'gender', 'institution', 'occupation', 'photo',
     ];
 
     protected $hidden = ['password', 'remember_token'];
@@ -29,4 +30,9 @@ class User extends Authenticatable implements MustVerifyEmail
     // Helper role
     public function isAdmin(): bool      { return $this->role === 'admin'; }
     public function isOrganizer(): bool  { return $this->role === 'organizer'; }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class, 'buyer_email', 'email');
+    }
 }
