@@ -45,9 +45,12 @@ class RegisteredUserController extends Controller
             $orgName = $validated['org_name'] ?? ($user->name."'s Organizer");
             Organizer::create([
                 'user_id'       => $user->id,
-                'name'          => $orgName,
-                'slug'          => str($orgName)->slug().'-'.str()->random(4),
-                'contact_email' => $user->email,
+                'company_name'  => $orgName,
+                'phone'         => $user->phone,
+                'address'       => null,
+                'is_verified'   => false,
+                'bank_account'  => null,
+                'bank_name'     => null,
             ]);
         }
 
