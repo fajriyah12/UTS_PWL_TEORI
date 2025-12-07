@@ -10,6 +10,7 @@ use App\Http\Controllers\AboutController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\Admin\DataMasterController;
 use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\Admin\LaporanController;
 
 Route::get('/', HomeController::class)->name('home');
 Route::get('/about', [AboutController::class, 'index'])->name('about');
@@ -26,7 +27,6 @@ Route::post('/checkout/{ticketType}', [CheckoutController::class, 'store'])->nam
 // Area umum (harus login + email verified)
 Route::middleware(['auth','verified'])->group(function () {
     Route::view(uri: '/dashboard', view: 'dashboard')->name(name: 'dashboard');
-    Route::view('/settings', 'user.settings')->name('user.settings'); // default dashboard
 });
 
 // Admin
@@ -49,6 +49,7 @@ Route::prefix('admin')
         Route::put('/settings/personal-info', [SettingController::class, 'updatePersonalInfo'])->name('admin.update-personal-info');
         Route::put('/settings/password', [SettingController::class, 'changePassword'])->name('admin.change-password');
         Route::delete('/settings/profile', [SettingController::class, 'deleteProfile'])->name('admin.delete-profile');
+        Route::get('/laporan', [LaporanController::class, 'index'])->name('admin.laporan');
     });
 
 // Organizer

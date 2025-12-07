@@ -11,4 +11,16 @@ class OrderItem extends Model {
     public function order(){ return $this->belongsTo(Order::class); }
     public function ticketType(){ return $this->belongsTo(TicketType::class); }
     public function tickets(){ return $this->hasMany(Ticket::class); }
+    public function event()
+    {
+        return $this->hasOneThrough(
+            Event::class,          // Model tujuan
+            TicketType::class,     // Model perantara
+            'id',                  // PK di ticket_types
+            'id',                  // PK di events
+            'ticket_type_id',      // FK pada order_items → ticket_types.id
+            'event_id'             // FK pada ticket_types → events.id
+        );
+    }
 }
+
