@@ -8,15 +8,32 @@ use Illuminate\Http\Request;
 class EventController extends Controller
 {
     // tampilkan semua event publik
-    public function index()
-    {
-        $events = Event::with('organizer', 'venue')
-            ->where('status', 'published')
-            ->orderBy('start_time', 'asc')
-            ->get();
-
-        return view('events.index', compact('events'));
+    public function index(Request $request)
+{
+    $organizer = auth()->user()->organizer;
+    
+    $query = $organizer->events()->with('ticketTypes')->latest();
+    
+    // Search filter
+    if ($request->has('search') && $request->search != '') {
+        $query->where('title', 'like', '%' . $request->search . '%')
+              ->orWhere('description', 'like', '%' . $request->search . '%');
     }
+    
+    // Status filter
+    if ($request->has('status') && $request->status != '') {
+        $query->where('status', $request->status);
+    }
+    
+    // Category filter
+    if ($request->has('category') && $request->category != '') {
+        $query->where('category', $request->category);
+    }
+    
+    $events = $query->paginate(10)->withQueryString();
+    
+    return view('organizer.events.index', compact('events'));
+}
 
     // tampilkan detail event berdasarkan slug
     public function show($slug)

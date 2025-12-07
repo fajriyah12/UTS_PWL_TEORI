@@ -31,16 +31,26 @@ class AuthenticatedSessionController extends Controller
             ])->onlyInput('email');
         }
 
-        $request->session()->regenerate();
-
         // Kalau belum verifikasi email → Breeze akan mengarahkan ke verification notice
         $user = $request->user();
 
+        // Jika ada intended redirect, gunakan itu
+        if ($request->session()->has('url.intended')) {
+            $request->session()->regenerate();
+            return redirect()->intended();
+        }
+
         // Redirect per role
-       if ($user->role === 'admin') {
-        return redirect()->route('admin.dashboard');
-    }
-    return redirect()->to(path: '/');
+        if ($user->role === 'admin') {
+            $request->session()->regenerate();
+            return redirect()->route('admin.dashboard');
+        } elseif ($user->role === 'organizer') {
+            $request->session()->regenerate();
+            return redirect()->route('organizer.dashboard');
+        }
+
+        $request->session()->regenerate();
+        return redirect()->route('dashboard');
     }
 
     public function destroy(Request $request): RedirectResponse

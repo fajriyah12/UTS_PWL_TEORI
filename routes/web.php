@@ -57,9 +57,38 @@ Route::prefix('admin')
         Route::delete('/settings/profile', [SettingController::class, 'deleteProfile'])->name('admin.delete-profile');
     });
 
-// Organizer
-Route::prefix('organizer')
-    ->middleware(['auth','verified','role:organizer'])
-    ->group(function () {
-        Route::get('/dashboard', OrgDashboard::class)->name('organizer.dashboard');
+
+// Organizer Routes
+Route::middleware(['auth', 'verified'])->prefix('organizer')->name('organizer.')->group(function () {
+
+    // Pending verification page (outside organizer middleware)
+    Route::get('/pending-verification', function () {
+        return view('organizer.pending-verification');
+    })->name('pending-verification');
+
+    // Protected organizer routes
+    Route::middleware(['organizer'])->group(function () {
+        // Dashboard
+        Route::get('/dashboard', [\App\Http\Controllers\Organizer\DashboardController::class, 'index'])
+            ->name('dashboard');
+
+        // Events Management
+        Route::resource('events', \App\Http\Controllers\Organizer\EventController::class);
+
+        // Tickets Management
+        Route::get('events/{event}/tickets', [\App\Http\Controllers\Organizer\TicketController::class, 'index'])
+            ->name('events.tickets.index');
+        Route::get('tickets/{ticket}/download', [\App\Http\Controllers\Organizer\TicketController::class, 'download'])
+            ->name('tickets.download');
+
+        // Profile
+        Route::get('/profile', [\App\Http\Controllers\Organizer\ProfileController::class, 'edit'])
+            ->name('profile.edit');
+        Route::put('/profile', [\App\Http\Controllers\Organizer\ProfileController::class, 'update'])
+            ->name('profile.update');
+
+        // Statistics
+        Route::get('/statistics', [\App\Http\Controllers\Organizer\DashboardController::class, 'statistics'])
+            ->name('statistics');
     });
+});

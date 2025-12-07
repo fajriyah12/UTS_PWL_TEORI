@@ -15,6 +15,10 @@ class EventSeeder extends Seeder
 {
     public function run(): void
     {
+        // Clear existing events and ticket types to prevent duplicates on re-seed
+        TicketType::query()->delete();
+        Event::query()->delete();
+
         // 1) Pastikan ada user organizer
         $orgUser = User::firstOrCreate(
             ['email' => 'organizer@orrea.test'],

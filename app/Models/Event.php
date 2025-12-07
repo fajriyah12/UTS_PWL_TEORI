@@ -11,7 +11,10 @@ class Event extends Model {
     public function scopePublished($q) { return $q->where('status', 'published'); }
     protected $casts=['start_time'=>'datetime','end_time'=>'datetime'];
     public function organizer(){ return $this->belongsTo(Organizer::class); }
-    public function venue(){ return $this->belongsTo(Venue::class); }
+   public function venue()
+{
+    return $this->belongsTo(Venue::class, 'venue_id', 'id'); // UUID ke UUID
+}
     public function ticketTypes(){ return $this->hasMany(TicketType::class); }
 
     public function getBannerUrlAttribute(): string

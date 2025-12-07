@@ -7,21 +7,20 @@ use App\Models\TicketType;
 
 class HomeController extends Controller
 {
-    public function __invoke(Request $request)
+public function __invoke(Request $request)
 {
-    $type  = $request->query('type');
+    $type = $request->query('type');
 
     $types = \App\Models\TicketType::query()
         ->select('name')->distinct()->orderBy('name')->pluck('name');
 
-    $events = \App\Models\Event::with(['venue','ticketTypes'])
+    $events = \App\Models\Event::with(['ticketTypes']) // Hapus 'venue' dari with
         ->published()
-        ->withMin('ticketTypes','price')
-        ->when($type, fn($q) => $q->whereHas('ticketTypes', fn($t) => $t->where('name',$type)))
-        ->orderBy('created_at','desc')
-        ->paginate(32)                 
-        ->withQueryString();           
+        ->when($type, fn($q) => $q->whereHas('ticketTypes', fn($t) => $t->where('name', $type)))
+        ->orderBy('created_at', 'desc')
+        ->paginate(32)
+        ->withQueryString();
 
-    return view('welcome', compact('events','types','type'));
+    return view('welcome', compact('events', 'types', 'type'));
 }
 }
