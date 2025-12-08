@@ -66,5 +66,6 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 </script>
 
+    @stack('scripts')
 </body>
 </html>

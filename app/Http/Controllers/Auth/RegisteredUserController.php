@@ -26,11 +26,11 @@ class RegisteredUserController extends Controller
             'email'    => ['required','string','lowercase','email','max:255','unique:users,email'],
             'phone'    => ['nullable','string','max:32'],
             'password' => ['required','confirmed','min:8'],
-            'role'     => ['nullable', Rule::in(['user','organizer'])],
-            'org_name' => ['nullable','string','max:150'],
+            // Paksa role user saja saat register biasa
+            // field role & org_name tidak lagi diterima dari form publik
         ]);
 
-        $role = $validated['role'] ?? 'user';
+        $role = 'user';
 
         $user = User::create([
             'name'     => $validated['name'],
@@ -39,20 +39,6 @@ class RegisteredUserController extends Controller
             'role'     => $role,                   // default user / organizer opsional
             'password' => Hash::make($validated['password']),
         ]);
-
-        // Jika register sebagai organizer, buat profil organizer minimal
-        if ($role === 'organizer') {
-            $orgName = $validated['org_name'] ?? ($user->name."'s Organizer");
-            Organizer::create([
-                'user_id'       => $user->id,
-                'company_name'  => $orgName,
-                'phone'         => $user->phone,
-                'address'       => null,
-                'is_verified'   => false,
-                'bank_account'  => null,
-                'bank_name'     => null,
-            ]);
-        }
 
         event(new Registered($user));
 

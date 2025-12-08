@@ -136,6 +136,39 @@
                 </div>
             </div>
             
+            <!-- Ticket Verification -->
+            <div class="mt-8 border-t border-gray-200 pt-6">
+                <h3 class="text-lg font-semibold mb-4 text-gray-800">Verifikasi Tiket</h3>
+                <div class="bg-indigo-50 border border-indigo-200 rounded-lg p-6">
+                    <p class="mb-4 text-sm text-indigo-700">
+                        Scan QR Code tiket pengunjung atau masukkan Kode Serial tiket untuk melakukan check-in.
+                    </p>
+                    <form action="{{ route('organizer.events.verify-ticket', $event) }}" method="POST" class="flex gap-4">
+                        @csrf
+                        <div class="flex-1">
+                            <input type="text" name="token" placeholder="Scan QR Token atau Masukkan Kode Serial..." 
+                                   class="w-full rounded-lg border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
+                                   autofocus>
+                        </div>
+                        <button type="submit" class="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 font-semibold">
+                            Verifikasi
+                        </button>
+                    </form>
+                    
+                    @if(session('success'))
+                        <div class="mt-4 p-4 bg-green-100 text-green-700 rounded-lg border border-green-300">
+                            <i class="fas fa-check-circle mr-2"></i> {{ session('success') }}
+                        </div>
+                    @endif
+                    
+                    @if(session('error'))
+                         <div class="mt-4 p-4 bg-red-100 text-red-700 rounded-lg border border-red-300">
+                            <i class="fas fa-times-circle mr-2"></i> {{ session('error') }}
+                        </div>
+                    @endif
+                </div>
+            </div>
+
             <!-- Description -->
             <div class="mt-8 pt-6 border-t border-gray-200">
                 <h3 class="text-lg font-semibold mb-4 text-gray-800">Deskripsi</h3>

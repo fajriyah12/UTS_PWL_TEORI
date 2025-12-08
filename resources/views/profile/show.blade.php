@@ -16,9 +16,24 @@
             <div class="mt-5 bg-white shadow sm:rounded-lg overflow-hidden">
                 <div class="px-4 py-5 sm:p-6 text-center">
                     <div class="mb-4">
-                        <img class="h-32 w-32 rounded-full object-cover mx-auto border-4 border-white shadow-lg" 
-                             src="{{ $user->photo ? asset('storage/profile/' . $user->photo) : asset('images/default-avatar.png') }}" 
-                             alt="{{ $user->name }}">
+                        @php
+                            $nameParts = preg_split('/\s+/', trim($user->name));
+                            $initials = '';
+                            foreach ($nameParts as $part) {
+                                $initials .= mb_strtoupper(mb_substr($part, 0, 1));
+                            }
+                            $initials = mb_substr($initials, 0, 2);
+                        @endphp
+
+                        @if ($user->photo)
+                            <img class="h-32 w-32 rounded-full object-cover mx-auto border-4 border-white shadow-lg"
+                                 src="{{ asset('storage/profile/' . $user->photo) }}"
+                                 alt="{{ $user->name }}">
+                        @else
+                            <div class="h-32 w-32 rounded-full mx-auto flex items-center justify-center bg-indigo-600 text-white text-3xl font-semibold shadow-lg border-4 border-white">
+                                {{ $initials }}
+                            </div>
+                        @endif
                     </div>
                     
                     <h3 class="text-lg font-medium text-gray-900">{{ $user->name }}</h3>
@@ -41,6 +56,8 @@
                     <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         @method('PATCH')
+                        {{-- Email tetap dikirim untuk kebutuhan validasi, tapi tidak diubah di halaman ini --}}
+                        <input type="hidden" name="email" value="{{ old('email', $user->email) }}">
 
                         <div class="grid grid-cols-6 gap-6">
                             

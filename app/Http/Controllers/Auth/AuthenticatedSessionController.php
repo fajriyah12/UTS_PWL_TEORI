@@ -49,8 +49,9 @@ class AuthenticatedSessionController extends Controller
             return redirect()->route('organizer.dashboard');
         }
 
+        // Default (role user) diarahkan ke beranda /
         $request->session()->regenerate();
-        return redirect()->route('dashboard');
+        return redirect()->route('home');
     }
 
     public function destroy(Request $request): RedirectResponse

@@ -21,8 +21,11 @@ require __DIR__.'/profile.php';
 Route::get('/events', [EventController::class, 'index'])->name('events.index');
 Route::get('/events/{slug}', [EventController::class, 'show'])->name('events.show');
 
-Route::get('/checkout/{ticketType}', [CheckoutController::class, 'create'])->name('checkout.create');
-Route::post('/checkout/{ticketType}', [CheckoutController::class, 'store'])->name('checkout.store');
+Route::middleware('auth')->group(function () {
+    Route::get('/checkout/success', [App\Http\Controllers\CheckoutController::class, 'success'])->name('checkout.success'); // Moved up
+    Route::get('/checkout/{ticket_type_id}', [App\Http\Controllers\CheckoutController::class, 'create'])->name('checkout.create');
+    Route::post('/checkout/{ticket_type_id}', [App\Http\Controllers\CheckoutController::class, 'store'])->name('checkout.store');
+});
 
 // Area umum (harus login + email verified)
 Route::middleware(['auth','verified'])->group(function () {
@@ -90,5 +93,13 @@ Route::middleware(['auth', 'verified'])->prefix('organizer')->name('organizer.')
         // Statistics
         Route::get('/statistics', [\App\Http\Controllers\Organizer\DashboardController::class, 'statistics'])
             ->name('statistics');
+            
+        // Export Buyers
+        Route::get('/events/{event}/export-buyers', [\App\Http\Controllers\Organizer\DashboardController::class, 'exportBuyers'])
+            ->name('events.export-buyers');
+            
+        // Verify Ticket
+        Route::post('/events/{event}/verify-ticket', [\App\Http\Controllers\Organizer\TicketController::class, 'verify'])
+            ->name('events.verify-ticket');
     });
 });

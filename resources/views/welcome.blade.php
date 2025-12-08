@@ -80,7 +80,10 @@
 
 
     {{-- Events Grid --}}
-    <x-events.grid :events="$events" :type="$type ?? null" />
+    {{-- Events Grid --}}
+    <div id="events-grid-container">
+        <x-events.grid :events="$events" :type="$type ?? null" />
+    </div>
 
 </div>
 @endsection
