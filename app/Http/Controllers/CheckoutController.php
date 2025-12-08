@@ -120,12 +120,18 @@ class CheckoutController extends Controller
         
         if ($orderCode) {
             $order = Order::where('order_code', $orderCode)->first();
-            if ($order) {
+            if ($order && $order->status !== 'paid') { // Prevent double decrement
                 $order->update(['status' => 'paid']);
                 
-                // Update tickets status
+                // Update tickets status & Decrement Quota
                 foreach($order->orderItems as $item) {
                      $item->tickets()->update(['status' => 'issued']);
+                     
+                     // Decrement Quota
+                     $ticketType = $item->ticketType;
+                     if ($ticketType) {
+                         $ticketType->decrement('quota', $item->qty);
+                     }
                 }
             }
         }

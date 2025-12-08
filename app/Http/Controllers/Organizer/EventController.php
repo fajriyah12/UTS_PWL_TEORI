@@ -13,10 +13,26 @@ use Illuminate\Support\Str;
 
 class EventController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $organizer = auth()->user()->organizer;
-        $events = $organizer->events()->latest()->paginate(10);
+        $organizer = auth('staff')->user()->organizer;
+        $query = $organizer->events()->latest();
+
+        // Search Filter
+        if ($request->has('search') && $request->search != '') {
+            $query->where('title', 'like', '%' . $request->search . '%');
+        }
+
+        // Status Filter
+        if ($request->has('status') && $request->status != '') {
+            $query->where('status', $request->status);
+        }
+
+        $events = $query->paginate(10);
+
+        if ($request->ajax()) {
+            return view('organizer.events._table', compact('events'))->render();
+        }
         
         return view('organizer.events.index', compact('events'));
     }
@@ -29,7 +45,7 @@ class EventController extends Controller
     
     public function store(StoreEventRequest $request)
     {
-        $organizer = auth()->user()->organizer;
+        $organizer = auth('staff')->user()->organizer;
         
         // Handle image upload
         $imagePath = null;

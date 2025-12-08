@@ -33,6 +33,17 @@ Route::middleware('guest')->group(function () {
 
     Route::post('reset-password', [NewPasswordController::class, 'store'])
                 ->name('password.store');
+
+    // STAFF LOGIN & LOGOUT ROUTES
+    Route::get('console/login', [\App\Http\Controllers\Auth\StaffSessionController::class, 'create'])
+                ->name('staff.login');
+    Route::post('console/login', [\App\Http\Controllers\Auth\StaffSessionController::class, 'store']);
+    Route::post('console/logout', [\App\Http\Controllers\Auth\StaffSessionController::class, 'destroy'])
+                ->name('staff.logout');
+
+    // GOOGLE AUTH
+    Route::get('auth/google', [\App\Http\Controllers\Auth\GoogleController::class, 'redirectToGoogle'])->name('auth.google');
+    Route::get('auth/google/callback', [\App\Http\Controllers\Auth\GoogleController::class, 'handleGoogleCallback']);
 });
 
 Route::middleware('auth')->group(function () {

@@ -13,7 +13,7 @@
                 </p>
             </div>
 
-            <div class="mt-5 bg-white shadow sm:rounded-lg overflow-hidden">
+            <div class="mt-5 bg-white shadow sm:rounded-lg overflow-hidden mb-5">
                 <div class="px-4 py-5 sm:p-6 text-center">
                     <div class="mb-4">
                         @php
@@ -43,6 +43,17 @@
                     </span>
                 </div>
             </div>
+            <div class="text-center">
+  <a href="https://wa.me/6285805005121" target="_blank" 
+     class="inline-block px-7 py-1.5 overflow-hidden text-sm font-semibold transition-transform rounded-full group text-green-700/70 bg-green-300/30 hover:bg-green-500/70 hover:text-white">
+    <span before="Lanjut Ke WhatsApp" 
+          class="relative py-1.5 transition-transform inline-block before:content-[attr(before)] before:py-1.5 before:absolute before:top-full group-hover:-translate-y-full ">
+      ✨ Daftarkan EventMu
+    </span>
+  </a>
+</div>
+
+
         </div>
 
         <!-- Right Side: Edit Forms -->

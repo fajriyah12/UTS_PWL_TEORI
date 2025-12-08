@@ -34,7 +34,7 @@
                             <div class="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center">
                                 <i class="fas fa-user text-indigo-600"></i>
                             </div>
-                            <span>{{ auth()->user()->name }}</span>
+                            <span>{{ auth('staff')->user()->name }}</span>
                             <i class="fas fa-chevron-down"></i>
                         </button>
                         
@@ -46,7 +46,7 @@
                                 <i class="fas fa-chart-bar mr-2"></i> Statistik
                             </a>
                             <hr class="my-1">
-                            <form method="POST" action="{{ route('logout') }}">
+                            <form method="POST" action="{{ route('staff.logout') }}">
                                 @csrf
                                 <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100">
                                     <i class="fas fa-sign-out-alt mr-2"></i> Logout
@@ -66,17 +66,17 @@
             <div class="p-6">
                 <!-- Organizer Info -->
                 <div class="mb-8">
-                    @if(auth()->user()->organizer && auth()->user()->organizer->logo_path)
-                        <img src="{{ asset('storage/' . auth()->user()->organizer->logo_path) }}" 
+                    @if(auth('staff')->user()->organizer && auth('staff')->user()->organizer->logo_path)
+                        <img src="{{ asset('storage/' . auth('staff')->user()->organizer->logo_path) }}" 
                              alt="Logo" class="w-16 h-16 rounded-full mx-auto mb-2">
                     @else
-                        <div class="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-2">
+                        <div class="w-16 h-16 bg-indigo-100 rounded-lg flex items-center justify-center mx-auto mb-2">
                             <i class="fas fa-building text-indigo-600 text-2xl"></i>
                         </div>
                     @endif
-                    <h3 class="text-center font-semibold">{{ auth()->user()->organizer->name ?? 'Organizer' }}</h3>
+                    <h3 class="text-center font-semibold">{{ auth('staff')->user()->organizer->name ?? 'Organizer' }}</h3>
                     <p class="text-center text-sm text-gray-500">
-                        {{ auth()->user()->organizer->is_verified ? '✅ Verified' : '⏳ Pending Verification' }}
+                        {{ auth('staff')->user()->organizer->is_verified ? '✅ Verified' : '⏳ Pending Verification' }}
                     </p>
                 </div>
 

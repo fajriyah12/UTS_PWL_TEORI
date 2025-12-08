@@ -31,32 +31,27 @@ class AuthenticatedSessionController extends Controller
             ])->onlyInput('email');
         }
 
-        // Kalau belum verifikasi email → Breeze akan mengarahkan ke verification notice
         $user = $request->user();
 
-        // Jika ada intended redirect, gunakan itu
-        if ($request->session()->has('url.intended')) {
-            $request->session()->regenerate();
-            return redirect()->intended();
+        // STRICT CHECK: Only 'user' role allowed here
+        if ($user->role !== 'user') {
+            Auth::guard('web')->logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+
+            return back()->withErrors([
+                'email' => 'Akun anda tidak terdaftar silahkan daftar terlebih dahulu.',
+            ])->onlyInput('email');
         }
 
-        // Redirect per role
-        if ($user->role === 'admin') {
-            $request->session()->regenerate();
-            return redirect()->route('admin.dashboard');
-        } elseif ($user->role === 'organizer') {
-            $request->session()->regenerate();
-            return redirect()->route('organizer.dashboard');
-        }
-
-        // Default (role user) diarahkan ke beranda /
         $request->session()->regenerate();
-        return redirect()->route('home');
+        return redirect()->intended(route('home'));
     }
 
     public function destroy(Request $request): RedirectResponse
     {
         Auth::guard('web')->logout();
+
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 

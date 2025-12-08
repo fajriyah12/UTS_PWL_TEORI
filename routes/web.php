@@ -22,7 +22,7 @@ require __DIR__.'/profile.php';
 Route::get('/events', [EventController::class, 'index'])->name('events.index');
 Route::get('/events/{slug}', [EventController::class, 'show'])->name('events.show');
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/checkout/success', [App\Http\Controllers\CheckoutController::class, 'success'])->name('checkout.success'); // Moved up
     Route::get('/checkout/{ticket_type_id}', [App\Http\Controllers\CheckoutController::class, 'create'])->name('checkout.create');
     Route::post('/checkout/{ticket_type_id}', [App\Http\Controllers\CheckoutController::class, 'store'])->name('checkout.store');
@@ -41,7 +41,7 @@ Route::middleware(['auth','verified'])->group(function () {
 
 // Admin
 Route::prefix('admin')
-    ->middleware(['auth','verified','role:admin'])
+    ->middleware(['auth:staff','role:admin'])
     ->group(function () {
         Route::get('/dashboard', AdminDashboard::class)->name('admin.dashboard');
         Route::get('/data-master', [DataMasterController::class, 'index'])->name('admin.datamaster');
@@ -65,7 +65,7 @@ Route::prefix('admin')
 
 
 // Organizer Routes
-Route::middleware(['auth', 'verified'])->prefix('organizer')->name('organizer.')->group(function () {
+Route::middleware(['auth:staff'])->prefix('organizer')->name('organizer.')->group(function () {
 
     // Pending verification page (outside organizer middleware)
     Route::get('/pending-verification', function () {
@@ -73,7 +73,7 @@ Route::middleware(['auth', 'verified'])->prefix('organizer')->name('organizer.')
     })->name('pending-verification');
 
     // Protected organizer routes
-    Route::middleware(['organizer'])->group(function () {
+    Route::middleware(['role:organizer'])->group(function () {
         // Dashboard
         Route::get('/dashboard', [\App\Http\Controllers\Organizer\DashboardController::class, 'index'])
             ->name('dashboard');
