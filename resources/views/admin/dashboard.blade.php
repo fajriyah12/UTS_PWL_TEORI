@@ -28,7 +28,7 @@
           <a href="{{ route('admin.datamaster') }}" class="flex items-center gap-2 px-6 py-3 text-gray-700 hover:bg-gray-100">
             <i class="fas fa-database"></i> Data Master
           </a>
-          <a href="#" class="flex items-center gap-2 px-6 py-3 text-gray-700 hover:bg-gray-100">
+          <a href="{{ route('admin.laporan') }}" class="flex items-center gap-2 px-6 py-3 text-gray-700 hover:bg-gray-100">
             <i class="fas fa-chart-line"></i> Laporan
           </a>
           <a href="{{ route('admin.settingAdmin') }}" class="flex items-center gap-2 px-6 py-3 text-gray-700 hover:bg-gray-100">
@@ -93,7 +93,7 @@
             <thead>
               <tr class="border-b">
                 <th class="py-2">ID</th>
-                <th class="py-2">Acara</th>
+                <th class="py-2">Event</th>
                 <th class="py-2">Pengguna</th>
                 <th class="py-2">Status</th>
               </tr>
