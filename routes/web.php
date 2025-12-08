@@ -49,6 +49,7 @@ Route::prefix('admin')
         Route::get('/tickets/{ticketType}/edit', [DataMasterController::class, 'editTicket'])->name('admin.edit-ticket');
         Route::get('/data-master/search-tickets', [DataMasterController::class, 'searchTickets'])->name('admin.search-tickets');
         Route::get('/data-master/search-users', [DataMasterController::class, 'searchUsers'])->name('admin.search-users');
+        Route::post('/data-master/users', [DataMasterController::class, 'storeUser'])->name('admin.store-user');
         Route::post('/data-master/tickets', [DataMasterController::class, 'storeTicket'])->name('admin.store-ticket');
         Route::put('/data-master/tickets/{ticketType}', [DataMasterController::class, 'updateTicket'])->name('admin.update-ticket');
         Route::delete('/data-master/tickets/{ticketType}', [DataMasterController::class, 'destroyTicket'])->name('admin.destroy-ticket');

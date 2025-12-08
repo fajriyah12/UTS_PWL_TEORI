@@ -40,10 +40,10 @@
           </a>
         </nav>
       </div>
-      <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="flex items-center gap-2 px-6 py-3 text-red-500 font-semibold hover:bg-red-50 border-t border-gray-200">
+      <a href="{{ route('staff.logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="flex items-center gap-2 px-6 py-3 text-red-500 font-semibold hover:bg-red-50 border-t border-gray-200">
         <i class="fas fa-sign-out-alt"></i> Keluar
       </a>
-      <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+      <form id="logout-form" action="{{ route('staff.logout') }}" method="POST" style="display: none;">
         @csrf
       </form>
     </aside>
@@ -62,7 +62,7 @@
           <div class="flex items-center gap-2">
             <div class="w-8 h-8 rounded-full bg-gray-300"></div>
             <div>
-              <p class="font-semibold text-gray-800">{{ auth()->user()->name }}</p>
+              <p class="font-semibold text-gray-800">{{ auth('staff')->user()->name }}</p>
               <p class="text-xs text-gray-500">Administrator</p>
             </div>
           </div>
@@ -252,11 +252,94 @@
     }
 
     function openAddUserModal() {
-      alert('Add User functionality will be implemented soon');
+      document.getElementById('addUserModal').classList.remove('hidden');
     }
 
-    // Attach handlers on page load
-    attachDeleteHandlers();
+    function closeAddUserModal() {
+      document.getElementById('addUserModal').classList.add('hidden');
+    }
+
+    // Wrap initialization in DOMContentLoaded
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        // Form Submit Handler
+        const addUserForm = document.getElementById('addUserForm');
+        if(addUserForm) {
+            addUserForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const formData = new FormData(this);
+                const data = Object.fromEntries(formData.entries());
+                
+                try {
+                    const response = await fetch("{{ route('admin.store-user') }}", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify(data)
+                    });
+                    
+                    if (response.ok) {
+                        closeAddUserModal();
+                        this.reset();
+                        searchUsers(); // Refresh table
+                        alert('User created successfully!');
+                    } else {
+                        const errorData = await response.json();
+                        alert('Error: ' + JSON.stringify(errorData.message || errorData));
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('An error occurred');
+                }
+            });
+        }
+
+        // Attach delete handlers
+        attachDeleteHandlers();
+    });
+
   </script>
+
+  <!-- Add User Modal -->
+  <div id="addUserModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+        <div class="mt-3">
+            <h3 class="text-lg font-medium text-gray-900 mb-4">Add New User</h3>
+            <form id="addUserForm">
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Name</label>
+                    <input type="text" name="name" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Email</label>
+                    <input type="email" name="email" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Role</label>
+                    <select name="role" class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                        <option value="user">User</option>
+                        <option value="organizer">Organizer</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+                <div class="mb-6">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Password</label>
+                    <input type="password" name="password" required minlength="8" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                </div>
+                <div class="flex justify-end gap-2">
+                    <button type="button" onclick="closeAddUserModal()" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                        Cancel
+                    </button>
+                    <button type="submit" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                        Create User
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+  </div>
 </body>
 </html>

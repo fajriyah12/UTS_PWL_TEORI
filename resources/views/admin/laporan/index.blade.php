@@ -48,13 +48,13 @@
         </nav>
       </div>
 
-      <a href="{{ route('logout') }}" 
+      <a href="{{ route('staff.logout') }}" 
          onclick="event.preventDefault(); document.getElementById('logout-form').submit();" 
          class="flex items-center gap-2 px-6 py-3 text-red-500 font-semibold hover:bg-red-50 border-t border-gray-200">
         <i class="fas fa-sign-out-alt"></i> Keluar
       </a>
 
-      <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display:none;">
+      <form id="logout-form" action="{{ route('staff.logout') }}" method="POST" style="display:none;">
         @csrf
       </form>
     </aside>
@@ -157,7 +157,7 @@
                             Rp {{ number_format($tx->total_price, 0, ',', '.') }}
                         </td>
                         <td class="py-2 px-2 text-sm">
-                    @if($tx->status == 'success')
+                    @if($tx->status == 'paid')
                         <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-semibold">
                             Berhasil
                         </span>
@@ -165,9 +165,13 @@
                         <span class="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-xs font-semibold">
                             Pending
                         </span>
-                    @else
+                    @elseif($tx->status == 'cancelled')
                         <span class="px-3 py-1 bg-red-100 text-red-700 rounded-full text-xs font-semibold">
-                            Gagal
+                            Dibatalkan
+                        </span>
+                    @else
+                        <span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-xs font-semibold">
+                            {{ ucfirst($tx->status) }}
                         </span>
                     @endif
                 </td>

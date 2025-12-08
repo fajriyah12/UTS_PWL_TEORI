@@ -119,12 +119,28 @@
                         </div>
 
                         <div class="pt-4 border-t border-slate-100 mt-4">
-                            <p class="text-sm text-slate-500 mb-1">Dibuat Oleh</p>
-                            <div class="flex items-center gap-2">
-                                <div class="w-8 h-8 bg-slate-200 rounded-full flex items-center justify-center text-xs font-bold text-slate-500">
-                                    {{ substr($event->organizer->name ?? 'O', 0, 1) }}
+                            <p class="text-sm text-slate-500 mb-2">Dibuat Oleh</p>
+                            <div class="flex items-center gap-3">
+                                @if(isset($event->organizer) && $event->organizer->logo_path)
+                                    <img src="{{ asset('storage/' . $event->organizer->logo_path) }}" 
+                                         alt="{{ $event->organizer->name }}" 
+                                         class="w-10 h-10 rounded-full object-cover border border-slate-200">
+                                @else
+                                    <div class="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 font-bold border border-indigo-200">
+                                        {{ substr($event->organizer->name ?? 'O', 0, 1) }}
+                                    </div>
+                                @endif
+                                <div>
+                                    <p class="text-slate-900 font-medium text-sm">{{ $event->organizer->name ?? 'Organizer' }}</p>
+                                    @if($event->organizer && $event->organizer->is_verified)
+                                        <div class="flex items-center gap-1 text-[10px] text-emerald-600 font-medium bg-emerald-50 px-1.5 py-0.5 rounded-full w-fit mt-0.5">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
+                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                            </svg>
+                                            Terverifikasi
+                                        </div>
+                                    @endif
                                 </div>
-                                <p class="text-slate-900 font-medium">{{ $event->organizer->name ?? 'Organizer' }}</p>
                             </div>
                         </div>
                     </div>

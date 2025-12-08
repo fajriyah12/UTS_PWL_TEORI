@@ -21,25 +21,18 @@ class DashboardController extends Controller
         // If organizer profile doesn't exist, create one
 
         if (!$organizer) {
-
+            $name = $user->name . "'s Organizer";
             $organizer = \App\Models\Organizer::create([
-
                 'user_id' => (string) $user->id, // Ensure it's cast to string
-
-                'company_name' => $user->name . "'s Organizer",
-
+                'name' => $name,
+                'slug' => \Illuminate\Support\Str::slug($name) . '-' . \Illuminate\Support\Str::random(5),
+                'company_name' => $name,
                 'phone' => $user->phone,
-
                 'address' => null,
-
                 'is_verified' => true, // Set to true since no admin verification needed
-
                 'bank_account' => null,
-
                 'bank_name' => null,
-
             ]);
-
         } else {
 
             // If organizer exists but has old schema (missing company_name), update it
@@ -58,6 +51,13 @@ class DashboardController extends Controller
 
             }
 
+        }
+        
+        // Refresh the relationship on the authenticated user instance
+        // This ensures that subsequent calls to auth('staff')->user()->organizer (like in the layout)
+        // return the newly created/updated organizer instead of null.
+        if ($organizer) {
+            auth('staff')->user()->setRelation('organizer', $organizer);
         }
 
 

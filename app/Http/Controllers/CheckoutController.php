@@ -127,10 +127,11 @@ class CheckoutController extends Controller
                 foreach($order->orderItems as $item) {
                      $item->tickets()->update(['status' => 'issued']);
                      
-                     // Decrement Quota
+                     // Decrement Quota & Increment Sold
                      $ticketType = $item->ticketType;
                      if ($ticketType) {
                          $ticketType->decrement('quota', $item->qty);
+                         $ticketType->increment('sold', $item->qty);
                      }
                 }
             }

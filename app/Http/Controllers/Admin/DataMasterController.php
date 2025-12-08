@@ -128,4 +128,24 @@ public function editTicket(TicketType $ticketType)
         $user->delete();
         return response()->json(['message' => 'User deleted successfully']);
     }
+
+    public function storeUser(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'role' => 'required|in:user,admin,organizer',
+            'password' => 'required|string|min:8',
+        ]);
+
+        User::create([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'role' => $validated['role'],
+            'password' => \Hash::make($validated['password']),
+            'email_verified_at' => now(), // Auto verify for admin created users
+        ]);
+
+        return response()->json(['message' => 'User created successfully'], 201);
+    }
 }
