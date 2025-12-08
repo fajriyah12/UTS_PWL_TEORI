@@ -10,6 +10,7 @@ use App\Http\Controllers\AboutController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\Admin\DataMasterController;
 use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\Admin\LaporanController;
 use App\Http\Controllers\UserTransactionController;
 
 Route::get('/', HomeController::class)->name('home');
@@ -58,6 +59,8 @@ Route::prefix('admin')
         Route::put('/settings/personal-info', [SettingController::class, 'updatePersonalInfo'])->name('admin.update-personal-info');
         Route::put('/settings/password', [SettingController::class, 'changePassword'])->name('admin.change-password');
         Route::delete('/settings/profile', [SettingController::class, 'deleteProfile'])->name('admin.delete-profile');
+        Route::get('/laporan', [LaporanController::class, 'index'])->name('admin.laporan');
+
     });
 
 
