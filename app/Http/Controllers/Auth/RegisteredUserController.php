@@ -45,6 +45,6 @@ class RegisteredUserController extends Controller
         Auth::login($user);
 
         // Breeze: akan mendorong ke email verification notice jika belum verified
-        return redirect()->intended(RouteServiceProvider::HOME);
+        return redirect()->route('verification.notice');
     }
 }

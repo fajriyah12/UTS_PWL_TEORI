@@ -128,11 +128,11 @@
                             @endif
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm text-gray-900">{{ $event->total_sold }} / {{ $event->total_quota }}</div>
-                            @if($event->total_quota > 0)
+                            <div class="text-sm text-gray-900">{{ $event->ticketTypes->sum('sold') }} / {{ $event->ticketTypes->sum('quota') }}</div>
+                            @if($event->ticketTypes->sum('quota') > 0)
                                 <div class="w-full bg-gray-200 rounded-full h-2 mt-1">
                                     <div class="bg-indigo-600 h-2 rounded-full" 
-                                         style="width: {{ min(100, ($event->total_sold / $event->total_quota) * 100) }}%"></div>
+                                         style="width: {{ min(100, ($event->ticketTypes->sum('sold') / $event->ticketTypes->sum('quota')) * 100) }}%"></div>
                                 </div>
                             @endif
                         </td>

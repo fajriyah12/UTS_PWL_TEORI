@@ -30,17 +30,18 @@ class StaffSessionController extends Controller
 
         $remember = (bool) $request->boolean('remember');
 
-        if (! Auth::attempt($credentials, $remember)) {
+        // Use 'staff' guard
+        if (! Auth::guard('staff')->attempt($credentials, $remember)) {
             return back()->withErrors([
                 'email' => 'Kredensial salah atau akun tidak ditemukan.',
             ])->onlyInput('email');
         }
 
-        $user = $request->user();
+        $user = Auth::guard('staff')->user();
 
         // STRICT CHECK: Only 'admin' or 'organizer' allowed
         if (! in_array($user->role, ['admin', 'organizer'])) {
-            Auth::guard('web')->logout();
+            Auth::guard('staff')->logout();
             $request->session()->invalidate();
             $request->session()->regenerateToken();
 
@@ -57,6 +58,16 @@ class StaffSessionController extends Controller
         } elseif ($user->role === 'organizer') {
             return redirect()->route('organizer.dashboard');
         }
+
+        return redirect('/');
+    }
+    
+    public function destroy(Request $request): RedirectResponse
+    {
+        Auth::guard('staff')->logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
 
         return redirect('/');
     }
