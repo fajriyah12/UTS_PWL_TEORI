@@ -38,8 +38,8 @@ class EventController extends Controller
     // tampilkan detail event berdasarkan slug
     public function show($slug)
     {
-        $event = \App\Models\Event::with('ticketTypes', 'venue')->where('slug', $slug)->firstOrFail();
-    return view('events.show', compact('event'));
+        $event = \App\Models\Event::with(['ticketTypes', 'venue', 'organizer'])->where('slug', $slug)->firstOrFail();
+        return view('events.show', compact('event'));
     }
     
 }

@@ -36,10 +36,10 @@
           </a>
         </nav>
       </div>
-      <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="flex items-center gap-2 px-6 py-3 text-red-500 font-semibold hover:bg-red-50 border-t border-gray-200">
+      <a href="{{ route('staff.logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="flex items-center gap-2 px-6 py-3 text-red-500 font-semibold hover:bg-red-50 border-t border-gray-200">
         <i class="fas fa-sign-out-alt"></i> Keluar
       </a>
-      <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+      <form id="logout-form" action="{{ route('staff.logout') }}" method="POST" style="display: none;">
         @csrf
       </form>
     </aside>
@@ -53,7 +53,7 @@
           <i class="fas fa-cog text-gray-500 text-xl"></i>
           <div class="flex items-center gap-2">
             <div class="w-8 h-8 rounded-full bg-gray-300"></div>
-            <span class="font-semibold">{{ auth()->user()->name }}</span>
+            <span class="font-semibold">{{ auth('staff')->user()->name }}</span>
           </div>
         </div>
       </div>

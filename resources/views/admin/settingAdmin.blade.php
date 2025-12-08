@@ -36,10 +36,10 @@
           </a>
         </nav>
       </div>
-      <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="flex items-center gap-2 px-6 py-3 text-red-500 font-semibold hover:bg-red-50 border-t border-gray-200">
+      <a href="{{ route('staff.logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="flex items-center gap-2 px-6 py-3 text-red-500 font-semibold hover:bg-red-50 border-t border-gray-200">
         <i class="fas fa-sign-out-alt"></i> Keluar
       </a>
-      <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+      <form id="logout-form" action="{{ route('staff.logout') }}" method="POST" style="display: none;">
         @csrf
       </form>
     </aside>

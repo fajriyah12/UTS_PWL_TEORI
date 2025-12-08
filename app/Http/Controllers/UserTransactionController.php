@@ -12,21 +12,21 @@ class UserTransactionController extends Controller
     {
         $user = $request->user();
 
-        $orders = Order::with(['orderItems.ticketType.event'])
+        $allOrders = Order::with(['orderItems.ticketType.event.organizer']) // Added organizer relation if needed
             ->where('buyer_email', $user->email)
             ->latest()
-            ->paginate(10);
+            ->get();
 
-        return view('transactions.index', compact('orders'));
+        $successfulOrders = $allOrders->where('status', 'paid');
+        $pendingOrders = $allOrders->where('status', '!=', 'paid');
+
+        return view('transactions.index', compact('successfulOrders', 'pendingOrders'));
     }
 
     public function tickets(Request $request)
     {
         $user = $request->user();
 
-        // Ambil semua tiket milik user
-        // Asumsi: Ticket berelasi dengan OrderItem -> Order (buyer_email)
-        // Dan TicketType -> Event
         $tickets = Ticket::whereHas('orderItem.order', function ($query) use ($user) {
             $query->where('buyer_email', $user->email);
         })
@@ -34,12 +34,14 @@ class UserTransactionController extends Controller
         ->with(['ticketType.event'])
         ->get();
 
+        // Upcoming: Future events AND Not checked in
         $upcomingTickets = $tickets->filter(function ($ticket) {
-            return $ticket->ticketType->event->start_time >= now();
+            return $ticket->ticketType->event->start_time >= now() && $ticket->status !== 'checked_in';
         });
 
+        // Past: Past events OR Checked in
         $pastTickets = $tickets->filter(function ($ticket) {
-            return $ticket->ticketType->event->start_time < now();
+            return $ticket->ticketType->event->start_time < now() || $ticket->status === 'checked_in';
         });
 
         return view('transactions.tickets', compact('upcomingTickets', 'pastTickets'));
