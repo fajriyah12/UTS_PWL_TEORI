@@ -13,7 +13,9 @@
         Bayar Sekarang
     </button>
 
-    <form id="finish-form" action="/" method="GET"></form>
+    <form id="finish-form" action="{{ route('checkout.success') }}" method="GET">
+        <input type="hidden" name="order_id" value="{{ $orderId }}">
+    </form>
 </div>
 
 <script src="https://app.sandbox.midtrans.com/snap/snap.js"

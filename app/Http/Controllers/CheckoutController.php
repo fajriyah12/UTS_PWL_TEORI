@@ -104,8 +104,32 @@ class CheckoutController extends Controller
 
         // generate Snap Token
         $snapToken = Snap::getSnapToken($params);
+        
+        // Update Order with Snap Token
+        $order->update([
+            'snap_token' => $snapToken,
+            'status' => 'pending'
+        ]);
 
         // kirim ke view untuk ditampilkan via Midtrans Snap.js
         return view('checkout.payment', compact('snapToken', 'orderId', 'total'));
+    }
+    public function success(Request $request)
+    {
+        $orderCode = $request->get('order_id') ?? $request->query('order_id');
+        
+        if ($orderCode) {
+            $order = Order::where('order_code', $orderCode)->first();
+            if ($order) {
+                $order->update(['status' => 'paid']);
+                
+                // Update tickets status
+                foreach($order->orderItems as $item) {
+                     $item->tickets()->update(['status' => 'issued']);
+                }
+            }
+        }
+        
+        return redirect()->route('transactions.index')->with('success', 'Pembayaran Berhasil! Tiket Anda sudah aktif.');
     }
 }

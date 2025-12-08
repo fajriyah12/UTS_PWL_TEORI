@@ -11,4 +11,5 @@ class TicketType extends Model {
     protected $casts=['sales_start'=>'datetime','sales_end'=>'datetime'];
     public function event(){ return $this->belongsTo(Event::class); }
     public function orderItems(){ return $this->hasMany(OrderItem::class); }
+    public function tickets(){ return $this->hasMany(Ticket::class); }
 }

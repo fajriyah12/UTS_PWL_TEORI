@@ -20,6 +20,12 @@ class Organizer extends Model
     // Kolom yang bisa diisi massal
     protected $fillable = [
         'user_id',
+        'name', // Add this
+        'slug', // Add this
+        'contact_email', // Add this
+        'contact_phone', // Add this
+        'bio', // Add this
+        'logo_path', // Add this
         'company_name',
         'phone',
         'address',

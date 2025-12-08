@@ -30,6 +30,7 @@ class UserTransactionController extends Controller
         $tickets = Ticket::whereHas('orderItem.order', function ($query) use ($user) {
             $query->where('buyer_email', $user->email);
         })
+        ->whereIn('status', ['issued', 'checked_in'])
         ->with(['ticketType.event'])
         ->get();
 

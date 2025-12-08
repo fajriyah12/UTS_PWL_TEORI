@@ -9,7 +9,8 @@ class Order extends Model
 {
     protected $fillable = [
         'ticket_type_id', 'buyer_name', 'buyer_email',
-        'quantity', 'total_price', 'order_code'
+        'quantity', 'total_price', 'order_code',
+        'status', 'snap_token'
     ];
 
     public $incrementing = false;

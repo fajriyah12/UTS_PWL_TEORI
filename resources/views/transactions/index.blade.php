@@ -28,9 +28,42 @@
                             <p class="text-lg font-semibold text-slate-900">
                                 Rp {{ number_format($order->total_price, 0, ',', '.') }}
                             </p>
-                            <span class="inline-flex items-center mt-1 px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-100">
-                                Berhasil
-                            </span>
+                            
+                            @php
+                                $isExpired = $order->status == 'pending' && $order->created_at < now()->subDay();
+                            @endphp
+
+                            @if($order->status == 'pending')
+                                @if($isExpired)
+                                    <span class="inline-flex items-center mt-1 px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 border border-red-200">
+                                        Kadaluarsa (Gagal)
+                                    </span>
+                                @else
+                                    <span class="inline-flex items-center mt-1 px-2 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 border border-yellow-200">
+                                        Menunggu Pembayaran
+                                    </span>
+                                    @if($order->snap_token)
+                                        <div class="mt-2">
+                                            <button onclick="pay('{{ $order->snap_token }}')" 
+                                                    class="text-xs bg-indigo-600 text-white px-3 py-1.5 rounded-lg hover:bg-indigo-700 transition font-semibold">
+                                                Bayar Sekarang
+                                            </button>
+                                        </div>
+                                    @endif
+                                @endif
+                            @elseif($order->status == 'paid')
+                                <span class="inline-flex items-center mt-1 px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-100">
+                                    Berhasil
+                                </span>
+                            @elseif($order->status == 'cancelled')
+                                <span class="inline-flex items-center mt-1 px-2 py-0.5 rounded-full text-xs font-medium bg-red-50 text-red-700 border border-red-100">
+                                    Dibatalkan
+                                </span>
+                            @else
+                                <span class="inline-flex items-center mt-1 px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 border border-gray-200">
+                                    {{ ucfirst($order->status) }}
+                                </span>
+                            @endif
                         </div>
                     </div>
 
@@ -45,7 +78,15 @@
                                     @foreach($item->tickets as $ticket)
                                         <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-3 flex items-center gap-3">
                                             <div class="shrink-0">
-                                                {!! \SimpleSoftwareIO\QrCode\Facades\QrCode::size(50)->generate($ticket->qr_token) !!}
+                                                @if($order->status == 'paid')
+                                                    {!! \SimpleSoftwareIO\QrCode\Facades\QrCode::size(50)->generate($ticket->qr_token) !!}
+                                                @else
+                                                    <div class="w-[50px] h-[50px] bg-slate-100 rounded flex items-center justify-center text-slate-400">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                                                        </svg>
+                                                    </div>
+                                                @endif
                                             </div>
 
                                             <div class="flex-1 min-w-0">
@@ -58,9 +99,15 @@
                                                 <p class="text-xs text-slate-400 font-mono truncate">
                                                     {{ $ticket->serial }}
                                                 </p>
+                                                @if($order->status != 'paid')
+                                                <p class="text-[10px] text-yellow-600 mt-1">
+                                                    Tiket muncul setelah pembayaran.
+                                                </p>
+                                                @endif
                                             </div>
 
                                             <div>
+                                                @if($order->status == 'paid')
                                                 <a href="{{ route('transactions.ticket.show', $ticket) }}"
                                                    class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-indigo-50 text-indigo-600 hover:bg-indigo-100 transition"
                                                    title="Lihat E-Ticket">
@@ -69,6 +116,7 @@
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                                                     </svg>
                                                 </a>
+                                                @endif
                                             </div>
                                         </div>
                                     @endforeach
@@ -90,3 +138,29 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ config('midtrans.client_key') }}"></script>
+<script>
+    function pay(snapToken) {
+        window.snap.pay(snapToken, {
+            onSuccess: function(result){
+                alert("Pembayaran Berhasil! Mengalihkan...");
+                // Redirect to success route to update status
+                window.location.href = "{{ route('checkout.success') }}" + "?order_id=" + result.order_id;
+            },
+            onPending: function(result){
+                alert("Menunggu pembayaran...");
+                location.reload();
+            },
+            onError: function(result){
+                alert("Terjadi kesalahan pembayaran");
+                console.log(result);
+            },
+            onClose: function(){
+                // Do nothing
+            }
+        });
+    }
+</script>
+@endpush
